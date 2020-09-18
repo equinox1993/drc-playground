@@ -7,6 +7,7 @@ if [[ "$(whoami)" != "root" ]]; then
   exit 1
 fi
 
+iw reg set US
 ip addr flush dev "$WLAN"
 # 192.168.1.10: console; 192.168.1.11: gamepad
 ip a a 192.168.1.10/24 dev "$WLAN"
@@ -18,9 +19,9 @@ NETBOOT_PID="$!"
 TMPDIR="$(mktemp -d)"
 
 cat wiiu_ap_normal.conf |
-    sed -e "s/interface=.*/interface=$WLAN/" |
-    sed -e "s/ssid=.*/ssid=$CONSOLE_SSID/" |
-    sed -e "s/wpa_psk=.*/wpa_psk=$CONSOLE_PSK/" > "$TMPDIR/wiiu_ap_normal.conf"
+    sed -e "s/^interface=.*/interface=$WLAN/" |
+    sed -e "s/^ssid=.*/ssid=$CONSOLE_SSID/" |
+    sed -e "s/^wpa_psk=.*/wpa_psk=$CONSOLE_PSK/" > "$TMPDIR/wiiu_ap_normal.conf"
 
 "$HOSTAPT_BIN" -dd "$TMPDIR/wiiu_ap_normal.conf"
 
